@@ -1,186 +1,113 @@
-import { useRouter } from 'next/router';
+import React from 'react';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+import Card from '../components/Card';
+import SearchBar from '../components/SearchBar';
+import Skeletons from '../components/Skeletons';
 import { Meta } from '../layout/Meta';
+import { Collection } from '../models/collections.model';
+import CollectionsService from '../services/collections';
 import { Main } from '../templates/Main';
 
-const Index = () => {
-  const router = useRouter();
+import 'swiper/css';
 
-  return (
-    <Main
-      meta={
-        <Meta
-          title="Next.js Boilerplate Presentation"
-          description="Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework."
-        />
-      }
-    >
-      <a href="https://github.com/ixartz/Next-js-Boilerplate">
-        <img
-          src={`${router.basePath}/assets/images/nextjs-starter-banner.png`}
-          alt="Nextjs starter banner"
-        />
-      </a>
-      <h1 className="font-bold text-2xl">
-        Boilerplate code for your Nextjs project with Tailwind CSS
-      </h1>
-      <p>
-        <span role="img" aria-label="rocket">
-          🚀
-        </span>{' '}
-        Next.js Boilerplate is a starter code for your Next js project by
-        putting developer experience first .{' '}
-        <span role="img" aria-label="zap">
-          ⚡️
-        </span>{' '}
-        Made with Next.js, TypeScript, ESLint, Prettier, Husky, Lint-Staged,
-        VSCode, Netlify, PostCSS, Tailwind CSS.
-      </p>
-      <h2 className="font-semibold text-lg">Next js Boilerplate Features</h2>
-      <p>Developer experience first:</p>
-      <ul>
-        <li>
-          <span role="img" aria-label="fire">
-            🔥
-          </span>{' '}
-          <a href="https://nextjs.org" rel="nofollow">
-            Next.js
-          </a>{' '}
-          for Static Site Generator
-        </li>
-        <li>
-          <span role="img" aria-label="art">
-            🎨
-          </span>{' '}
-          Integrate with{' '}
-          <a href="https://tailwindcss.com" rel="nofollow">
-            Tailwind CSS
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="nail_care">
-            💅
-          </span>{' '}
-          PostCSS for processing Tailwind CSS
-        </li>
-        <li>
-          <span role="img" aria-label="tada">
-            🎉
-          </span>{' '}
-          Type checking Typescript
-        </li>
-        <li>
-          <span role="img" aria-label="pencil2">
-            ✏️
-          </span>{' '}
-          Linter with{' '}
-          <a href="https://eslint.org" rel="nofollow">
-            ESLint
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="hammer_and_wrench">
-            🛠
-          </span>{' '}
-          Code Formatter with{' '}
-          <a href="https://prettier.io" rel="nofollow">
-            Prettier
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="fox_face">
-            🦊
-          </span>{' '}
-          Husky for Git Hooks
-        </li>
-        <li>
-          <span role="img" aria-label="no_entry_sign">
-            🚫
-          </span>{' '}
-          Lint-staged for running linters on Git staged files
-        </li>
-        <li>
-          <span role="img" aria-label="no_entry_sign">
-            🗂
-          </span>{' '}
-          VSCode configuration: Debug, Settings, Tasks and extension for
-          PostCSS, ESLint, Prettier, TypeScript
-        </li>
-        <li>
-          <span role="img" aria-label="robot">
-            🤖
-          </span>{' '}
-          SEO metadata, JSON-LD and Open Graph tags with Next SEO
-        </li>
-        <li>
-          <span role="img" aria-label="robot">
-            ⚙️
-          </span>{' '}
-          <a
-            href="https://www.npmjs.com/package/@next/bundle-analyzer"
-            rel="nofollow"
-          >
-            Bundler Analyzer
-          </a>
-        </li>
-        <li>
-          <span role="img" aria-label="rainbow">
-            🌈
-          </span>{' '}
-          Include a FREE minimalist theme
-        </li>
-        <li>
-          <span role="img" aria-label="hundred">
-            💯
-          </span>{' '}
-          Maximize lighthouse score
-        </li>
-      </ul>
-      <p>Built-in feature from Next.js:</p>
-      <ul>
-        <li>
-          <span role="img" aria-label="coffee">
-            ☕
-          </span>{' '}
-          Minify HTML &amp; CSS
-        </li>
-        <li>
-          <span role="img" aria-label="dash">
-            💨
-          </span>{' '}
-          Live reload
-        </li>
-        <li>
-          <span role="img" aria-label="white_check_mark">
-            ✅
-          </span>{' '}
-          Cache busting
-        </li>
-      </ul>
-      <h2 className="font-semibold text-lg">Our Stater code Philosophy</h2>
-      <ul>
-        <li>Minimal code</li>
-        <li>SEO-friendly</li>
-        <li>
-          <span role="img" aria-label="rocket">
-            🚀
-          </span>{' '}
-          Production-ready
-        </li>
-      </ul>
-      <p>
-        Check our GitHub project for more information about{' '}
-        <a href="https://github.com/ixartz/Next-js-Boilerplate">
-          Nextjs Boilerplate
-        </a>
-        . You can also browse our{' '}
-        <a href="https://creativedesignsguru.com/category/nextjs/">
-          Premium NextJS Templates
-        </a>{' '}
-        on our website to support this project.
-      </p>
-    </Main>
-  );
+type Props = {};
+
+type State = {
+  collections: Collection[];
+  filteredCollections: Collection[];
+  loading: boolean;
 };
 
-export default Index;
+export default class HomeSection extends React.Component<Props, State> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      collections: [],
+      filteredCollections: [],
+      loading: true,
+    };
+    this.search = this.search.bind(this);
+  }
+
+  componentDidMount() {
+    this.getCollections();
+  }
+
+  private async getCollections() {
+    const collections = await CollectionsService.getProducts();
+
+    this.setState({
+      ...this.state,
+      filteredCollections: collections,
+      collections,
+      loading: false,
+    });
+  }
+
+  async search(value: string) {
+    // Check if city is already existing before doing an API call
+    const { collections } = this.state;
+    if (value) {
+      const filteredCollections = collections.filter(
+        (collection) =>
+          collection.description && collection.description.includes(value)
+      );
+      this.setState({
+        ...this.state,
+        filteredCollections,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        filteredCollections: collections,
+      });
+    }
+  }
+
+  render() {
+    const { filteredCollections, loading } = this.state;
+    return (
+      <Main
+        meta={
+          <Meta
+            title="Collections"
+            description="Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework."
+          />
+        }
+      >
+        <section className="container m-auto">
+          <SearchBar searchQuery="" setSearchQuery={this.search} />
+          {loading ? (
+            <Skeletons></Skeletons>
+          ) : (
+            <Swiper spaceBetween={0} slidesPerView={1}>
+              <SwiperSlide>
+                <section>
+                  {filteredCollections.map((collection, index) => (
+                    <Card collection={collection} key={index} />
+                  ))}
+                </section>
+              </SwiperSlide>
+              <SwiperSlide>
+                <section>
+                  {filteredCollections.map((collection, index) => (
+                    <Card collection={collection} key={index} />
+                  ))}
+                </section>
+              </SwiperSlide>
+              <SwiperSlide>
+                <section>
+                  {filteredCollections.map((collection, index) => (
+                    <Card collection={collection} key={index} />
+                  ))}
+                </section>
+              </SwiperSlide>
+            </Swiper>
+          )}
+        </section>
+      </Main>
+    );
+  }
+}

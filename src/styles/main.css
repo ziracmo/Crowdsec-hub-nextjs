@@ -19,3 +19,34 @@ a:hover {
 .content ul {
   @apply my-6;
 }
+.center-arrow {
+  @apply absolute right-4 h-7 w-7;
+  top: 50%;
+  transform: translateY(-50%)
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+.bg-primary {
+  @apply bg-indigo-700;
+}
+
+.border-primary {
+  @apply border-indigo-700 border-2;
+}
+
+.text-primary {
+  @apply text-indigo-700;
+}
+
+.aligner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aligner.column {
+  flex-direction: column;
+}
